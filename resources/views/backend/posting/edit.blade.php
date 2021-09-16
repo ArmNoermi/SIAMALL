@@ -1,0 +1,113 @@
+@extends('backend.layout.master')
+
+@section('head')
+<style>
+    .ck-editor__editable_inline {
+        min-height: 300px;
+    }
+</style>
+@stop
+
+@section('content')
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        {{$title}}
+        <small>Input</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">{{$title}}</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+
+        <!-- right column -->
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Form {{$title}}</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form method="POST" action="/posts/{{$dt->id}}/update" enctype="multipart/form-data" class="form-horizontal">
+                    @csrf
+                    <div class="box-body">
+
+                        <div class="form-group {{$errors->has('title') ? 'has-error' : ''}}">
+                            <label for="title" class="col-sm-2 control-label">Judul Berita</label>
+                            <div class="col-sm-10">
+                                <input type="hidden" name="user_id" value="{{auth()->user()->id}}">
+                                <input type="text" class="form-control" name="title" id="title" value="{{$dt->title}}" placeholder="Judul Berita">
+                                @if($errors->has('title'))
+                                <p class="help-block badge badge-danger">{{$errors->first('title')}}</p>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group {{$errors->has('highlight') ? 'has-error' : ''}}">
+                            <label for="highlight" class="col-sm-2 control-label">Highlight Berita</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="highlight" id="highlight" value="{{$dt->highlight}}" placeholder="Highlight Berita">
+                                @if($errors->has('highlight'))
+                                <p class="help-block badge badge-danger">{{$errors->first('highlight')}}</p>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group {{$errors->has('thumbnail') ? 'has-error' : ''}}">
+                            <label for="thumbnail" class="col-sm-2 control-label">thumbnail Berita</label>
+                            <div class="col-sm-10">
+                                <img src="{{$dt->thumbnail()}}" width="110px" height="150px" alt="">
+                                <input type="file" name="thumbnail">
+                                @if($errors->has('thumbnail'))
+                                <p class="help-block badge badge-danger">{{$errors->first('thumbnail')}}</p>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group {{$errors->has('konten') ? 'has-error' : ''}}">
+                            <label for="konten" class="col-sm-2 control-label">Konten</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" name="konten" id="konten" rows="5">{!!$dt->konten!!}</textarea>
+                                @if($errors->has('konten'))
+                                <p class="help-block badge badge-danger">{{$errors->first('konten')}}</p>
+                                @endif
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+
+                        <button type="submit" class="btn btn-info pull-right"><i class="fa fa-edit"></i> Update</button>
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+
+        </div>
+        <!--/.col (right) -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@endsection
+
+@section('foot')
+<script src="{{asset('/back-end/dist/js/ckeditor.js')}}"></script>
+<!-- <script src="{{asset('backend/bower_components/ckeditor/ckeditor.js')}}"></script> -->
+
+<script>
+    ClassicEditor
+        .create(document.querySelector('#konten'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+
+@endsection
